@@ -75,6 +75,25 @@ const SensorState = {
   ACTIVE: 3,
 }
 
+class SensorErrorEvent extends Event {
+  constructor(type, errorEventInitDict) {
+    super(type, errorEventInitDict)
+
+    if (!errorEventInitDict || !errorEventInitDict.error instanceof DOMException) {
+      throw TypeError(
+        "Failed to construct 'SensorErrorEvent':" +
+        "2nd argument much contain 'error' property"
+      )
+    }
+
+    Object.defineProperty(this, "error", {
+      configurable: false,
+      writable: false,
+      value: errorEventInitDict.error
+    })
+  }
+}
+
 export class Sensor extends EventTarget {
   constructor(options) {
     super()
@@ -241,26 +260,6 @@ const toMat4FromQuat = (mat, q) => {
   }
 
   return mat
-}
-
-
-class SensorErrorEvent extends Event {
-  constructor(type, errorEventInitDict) {
-    super(type, errorEventInitDict)
-
-    if (!errorEventInitDict || !errorEventInitDict.error instanceof DOMException) {
-      throw TypeError(
-        "Failed to construct 'SensorErrorEvent':" +
-        "2nd argument much contain 'error' property"
-      )
-    }
-
-    Object.defineProperty(this, "error", {
-      configurable: false,
-      writable: false,
-      value: errorEventInitDict.error
-    })
-  }
 }
 
 const worldToScreen = (quaternion) => !quaternion ? null :
