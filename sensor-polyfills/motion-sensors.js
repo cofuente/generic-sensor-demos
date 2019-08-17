@@ -2,9 +2,9 @@
 const slot = window["__sensor__"] = Symbol("__sensor__")
 let orientation = {}
 
-console.log('slot:', slot, typeof slot)
 
 const defineProperties = (target, descriptions) => {
+  console.log('slot:', slot, typeof slot)
   for (const property in descriptions) {
     Object.defineProperty(target, property, {
       configurable: true,
@@ -57,7 +57,7 @@ export const EventTargetMixin = (superclass, ...eventNames) => class extends sup
 
 export class EventTarget extends EventTargetMixin(Object) { }
 
-function defineReadonlyProperties(target, slot, descriptions) {
+const defineReadonlyProperties = (target, slot, descriptions) => {
   const propertyBag = target[slot] || (target[slot] = new WeakMap)
   for (const property in descriptions) {
     propertyBag[property] = descriptions[property]
@@ -67,14 +67,12 @@ function defineReadonlyProperties(target, slot, descriptions) {
   }
 }
 
-function defineOnEventListener(target, name) {
-  Object.defineProperty(target, `on${name}`, {
-    enumerable: true,
-    configurable: false,
-    writable: true,
-    value: null
-  })
-}
+const defineOnEventListener = (target, name) => Object.defineProperty(target, `on${name}`, {
+  enumerable: true,
+  configurable: false,
+  writable: true,
+  value: null
+})
 
 const SensorState = {
   ERROR: 0,
@@ -169,7 +167,7 @@ const DeviceOrientationMixin = (superclass, ...eventNames) => class extends supe
   }
 }
 
-function toQuaternionFromEuler(alpha, beta, gamma) {
+const toQuaternionFromEuler = (alpha, beta, gamma) => {
   const degToRad = Math.PI / 180
 
   const x = (beta || 0) * degToRad
@@ -191,7 +189,7 @@ function toQuaternionFromEuler(alpha, beta, gamma) {
   return [qx, qy, qz, qw]
 }
 
-function rotateQuaternionByAxisAngle(quat, axis, angle) {
+const rotateQuaternionByAxisAngle = (quat, axis, angle) => {
   const sHalfAngle = Math.sin(angle / 2)
   const cHalfAngle = Math.cos(angle / 2)
 
@@ -202,7 +200,7 @@ function rotateQuaternionByAxisAngle(quat, axis, angle) {
     cHalfAngle
   ]
 
-  function multiplyQuaternion(a, b) {
+  const multiplyQuaternion = (a, b) => {
     const qx = a[0] * b[3] + a[3] * b[0] + a[1] * b[2] - a[2] * b[1]
     const qy = a[1] * b[3] + a[3] * b[1] + a[2] * b[0] - a[0] * b[2]
     const qz = a[2] * b[3] + a[3] * b[2] + a[0] * b[1] - a[1] * b[0]
@@ -211,7 +209,7 @@ function rotateQuaternionByAxisAngle(quat, axis, angle) {
     return [qx, qy, qz, qw]
   }
 
-  function normalizeQuaternion(quat) {
+  const normalizeQuaternion = (quat) => {
     const length = Math.sqrt(quat[0] ** 2 + quat[1] ** 2 + quat[2] ** 2 + quat[3] ** 2)
     if (length === 0) {
       return [0, 0, 0, 1]
@@ -223,7 +221,7 @@ function rotateQuaternionByAxisAngle(quat, axis, angle) {
   return normalizeQuaternion(multiplyQuaternion(quat, transformQuat))
 }
 
-function toMat4FromQuat(mat, q) {
+const toMat4FromQuat = (mat, q) => {
   const typed = mat instanceof Float32Array || mat instanceof Float64Array
 
   if (typed && mat.length >= 16) {
@@ -271,14 +269,12 @@ class SensorErrorEvent extends Event {
   }
 }
 
-function worldToScreen(quaternion) {
-  return !quaternion ? null :
-    rotateQuaternionByAxisAngle(
-      quaternion,
-      [0, 0, 1],
-      - orientation.angle * Math.PI / 180
-    )
-}
+const worldToScreen = (quaternion) => !quaternion ? null :
+  rotateQuaternionByAxisAngle(
+    quaternion,
+    [0, 0, 1],
+    - orientation.angle * Math.PI / 180
+  )
 
 export const RelativeOrientationSensor = window.RelativeOrientationSensor ||
   class RelativeOrientationSensor extends DeviceOrientationMixin(Sensor, "deviceorientation") {
