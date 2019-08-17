@@ -2,7 +2,6 @@
 const slot = window["__sensor__"] = Symbol("__sensor__")
 let orientation = {}
 
-
 const defineProperties = (target, descriptions) => {
   console.log('slot:', slot, typeof slot)
   for (const property in descriptions) {
@@ -12,11 +11,25 @@ const defineProperties = (target, descriptions) => {
     })
   }
 }
+const defineReadonlyProperties = (target, slot, descriptions) => {
+  const propertyBag = target[slot] || (target[slot] = new WeakMap)
+  for (const property in descriptions) {
+    propertyBag[property] = descriptions[property]
+    Object.defineProperty(target, property, {
+      get: () => propertyBag[property]
+    })
+  }
+}
+const defineOnEventListener = (target, name) => Object.defineProperty(target, `on${name}`, {
+  enumerable: true,
+  configurable: false,
+  writable: true,
+  value: null
+})
 
 Object.defineProperty(orientation, "angle", {
   get: () => { return (window.orientation || 0) }
 })
-
 
 export const EventTargetMixin = (superclass, ...eventNames) => class extends superclass {
   constructor(...args) {
@@ -54,25 +67,7 @@ export const EventTargetMixin = (superclass, ...eventNames) => class extends sup
     }
   }
 }
-
 export class EventTarget extends EventTargetMixin(Object) { }
-
-const defineReadonlyProperties = (target, slot, descriptions) => {
-  const propertyBag = target[slot] || (target[slot] = new WeakMap)
-  for (const property in descriptions) {
-    propertyBag[property] = descriptions[property]
-    Object.defineProperty(target, property, {
-      get: () => propertyBag[property]
-    })
-  }
-}
-
-const defineOnEventListener = (target, name) => Object.defineProperty(target, `on${name}`, {
-  enumerable: true,
-  configurable: false,
-  writable: true,
-  value: null
-})
 
 const SensorState = {
   ERROR: 0,
