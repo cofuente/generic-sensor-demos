@@ -89,7 +89,7 @@
               // sensor is NOT an array but an object that has onreading, onactivate and onerror keys
                 sensor.onreading = () => {
                   // console.log('within onreading:', 'sensor:', JSON.stringify(sensor))
-                  // quaternion IS an array of numbers
+                  // quaternion IS an array of numbers corresponding to x, y, z, w
                   console.log('within onreading:', 'quaternion:', JSON.stringify(sensor.quaternion))
                   return model.quaternion.fromArray(sensor.quaternion).inverse()
                 }
