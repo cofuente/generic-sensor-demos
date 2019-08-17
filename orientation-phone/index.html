@@ -29,10 +29,7 @@
   <script src="js/MTLLoader.js"></script>
 
   <script type="module">
-    import {
-              AbsoluteOrientationSensor,
-              RelativeOrientationSensor
-            } from '../sensor-polyfills/motion-sensors.js'
+    import { AbsoluteOrientationSensor } from '../sensor-polyfills/AbsoluteOrientationSensor.js'
 
             const params = new URLSearchParams(new URL(window.location.href).search.slice(1))
             const relative = !!Number(params.get("relative"))
@@ -86,7 +83,8 @@
             const initSensor = () => {
             const options = { frequency: 60, coordinateSystem }
               console.log(JSON.stringify(options))
-              sensor = relative ? new RelativeOrientationSensor(options) : new AbsoluteOrientationSensor(options)
+              sensor = new AbsoluteOrientationSensor(options)
+              // sensor = relative ? new RelativeOrientationSensor(options) : new AbsoluteOrientationSensor(options)
               // 'nah, AOS' , relative is false therefore we're using the Absolute Orientation Sensor
               // sensor is NOT an array but an object that has onreading, onactivate and onerror keys
                 sensor.onreading = () => {
