@@ -1,6 +1,10 @@
 const slot = window["__sensor__"] = Symbol("__sensor__")
 let orientation = {}
 
+Object.defineProperty(orientation, "angle", {
+  get: () => { return (window.orientation || 0) }
+})
+
 const defineProperties = (target, descriptions) => {
   console.log('slot:', slot, typeof slot)
   for (const property in descriptions) {
@@ -24,10 +28,6 @@ const defineOnEventListener = (target, name) => Object.defineProperty(target, `o
   configurable: false,
   writable: true,
   value: null
-})
-
-Object.defineProperty(orientation, "angle", {
-  get: () => { return (window.orientation || 0) }
 })
 
 export const EventTargetMixin = (superclass, ...eventNames) => class extends superclass {
