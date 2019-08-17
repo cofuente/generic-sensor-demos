@@ -37,59 +37,59 @@
 
             let container, sensor, camera, scene, renderer, model
 
-            const initScene = () => {
-                container = document.createElement('div')
-                document.body.appendChild(container)
+            // const initScene = () => {
+            //     container = document.createElement('div')
+            //     document.body.appendChild(container)
 
-                camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 200)
-                camera.position.z = 10
+            //     camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 200)
+            //     camera.position.z = 10
 
-                scene = new THREE.Scene()
+            //     scene = new THREE.Scene()
 
-                var ambientLight = new THREE.AmbientLight(0x404040, 6)
-                scene.add(ambientLight)
+            //     var ambientLight = new THREE.AmbientLight(0x404040, 6)
+            //     scene.add(ambientLight)
 
-                var manager = new THREE.LoadingManager()
-                var mtlLoader = new THREE.MTLLoader(manager)
-                mtlLoader.setTexturePath('resources/')
-                mtlLoader.load('resources/phone.mtl', materials => {
-                    materials.preload()
-                    var objLoader = new THREE.OBJLoader(manager)
-                    objLoader.setMaterials(materials)
-                    objLoader.load('resources/phone.obj', object => {
-                        model = object
-                        scene.add(model)
-                  })
-                })
+            //     var manager = new THREE.LoadingManager()
+            //     var mtlLoader = new THREE.MTLLoader(manager)
+            //     mtlLoader.setTexturePath('resources/')
+            //     mtlLoader.load('resources/phone.mtl', materials => {
+            //         materials.preload()
+            //         var objLoader = new THREE.OBJLoader(manager)
+            //         objLoader.setMaterials(materials)
+            //         objLoader.load('resources/phone.obj', object => {
+            //             model = object
+            //             scene.add(model)
+            //       })
+            //     })
 
-                renderer = new THREE.WebGLRenderer({ alpha: true })
-                renderer.setPixelRatio(window.devicePixelRatio)
-                renderer.setSize(window.innerWidth, window.innerHeight)
-                container.appendChild(renderer.domElement)
+            //     renderer = new THREE.WebGLRenderer({ alpha: true })
+            //     renderer.setPixelRatio(window.devicePixelRatio)
+            //     renderer.setSize(window.innerWidth, window.innerHeight)
+            //     container.appendChild(renderer.domElement)
 
-                window.addEventListener('resize', () => {
-                    camera.aspect = window.innerWidth / window.innerHeight
-                    camera.updateProjectionMatrix()
-                    renderer.setSize(window.innerWidth, window.innerHeight)
-                }, false)
+            //     window.addEventListener('resize', () => {
+            //         camera.aspect = window.innerWidth / window.innerHeight
+            //         camera.updateProjectionMatrix()
+            //         renderer.setSize(window.innerWidth, window.innerHeight)
+            //     }, false)
 
-                document.addEventListener('mousedown', () => document.documentElement.requestFullscreen())
-                document.addEventListener('fullscreenchange', () => {
-                    if (document.fullscreenElement != null) {
-                        screen.orientation.lock("natural")
-                    }
-                })
-            }
+            //     document.addEventListener('mousedown', () => document.documentElement.requestFullscreen())
+            //     document.addEventListener('fullscreenchange', () => {
+            //         if (document.fullscreenElement != null) {
+            //             screen.orientation.lock("natural")
+            //         }
+            //     })
+            // }
             const initSensor = () => {
             const options = { frequency: 60, coordinateSystem }
-              console.log(JSON.stringify(options))
+              console.log('options passed into AOS constructor:', JSON.stringify(options))
               sensor = new AbsoluteOrientationSensor(options)
               // sensor = relative ? new RelativeOrientationSensor(options) : new AbsoluteOrientationSensor(options)
               // 'nah, AOS' , relative is false therefore we're using the Absolute Orientation Sensor
               // sensor is NOT an array but an object that has onreading, onactivate and onerror keys
                 sensor.onreading = () => {
                   // console.log('within onreading:', 'sensor:', JSON.stringify(sensor))
-                  // quaternion IS an array of numbers
+                  // quaternion IS an array of numbers corresponding to x, y, z, w
                   console.log('within onreading:', 'quaternion:', JSON.stringify(sensor.quaternion))
                   return model.quaternion.fromArray(sensor.quaternion).inverse()
                 }
@@ -100,16 +100,15 @@
                 }
                 sensor.start()
 }
-            const renderScene = () => {
-              requestAnimationFrame(renderScene)
-              camera.lookAt(scene.position)
-              renderer.render(scene, camera)
-            }
+            // const renderScene = () => {
+            //   requestAnimationFrame(renderScene)
+            //   camera.lookAt(scene.position)
+            //   renderer.render(scene, camera)
+            // }
 
-            initScene()
-            console.log("No Permissions API, still try to start app.")
+            // initScene()
             initSensor()
-            renderScene()
+            // renderScene()
 
             let log = console.log
             console.log = (message, ...rest) => {
