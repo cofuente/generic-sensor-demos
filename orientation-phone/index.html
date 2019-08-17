@@ -36,17 +36,11 @@
 
             const params = new URLSearchParams(new URL(window.location.href).search.slice(1))
             const relative = !!Number(params.get("relative"))
-	    const coordinateSystem = params.get("coord")
+            const coordinateSystem = params.get("coord")
 
             let container, sensor, camera, scene, renderer, model
 
-            initScene()
-            console.log("No Permissions API, still try to start app.")
-            initSensor()
-
-            renderScene()
-
-            function initScene() {
+            const initScene = () => {
                 container = document.createElement('div')
                 document.body.appendChild(container)
 
@@ -89,9 +83,8 @@
                     }
                 })
             }
-
-            function initSensor() {
-              const options = { frequency: 60, coordinateSystem }
+            const initSensor = () => {
+            const options = { frequency: 60, coordinateSystem }
               console.log(JSON.stringify(options))
               sensor = relative ? new RelativeOrientationSensor(options) : new AbsoluteOrientationSensor(options)
               // 'nah, AOS' , relative is false therefore we're using the Absolute Orientation Sensor
@@ -107,13 +100,17 @@
                   }
                 }
                 sensor.start()
+}
+            const renderScene = () => {
+              requestAnimationFrame(renderScene)
+              camera.lookAt(scene.position)
+              renderer.render(scene, camera)
             }
 
-            function renderScene() {
-                requestAnimationFrame(renderScene)
-                camera.lookAt(scene.position)
-                renderer.render(scene, camera)
-            }
+            initScene()
+            console.log("No Permissions API, still try to start app.")
+            initSensor()
+            renderScene()
 
             let log = console.log
             console.log = (message, ...rest) => {
@@ -121,8 +118,7 @@
                 div.innerText = message
                 log.call(console, message, ...rest)
             }
-
-        </script>
+    </script>
   <div id="console"></div>
 </body>
 
