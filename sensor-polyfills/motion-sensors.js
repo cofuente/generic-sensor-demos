@@ -1,7 +1,8 @@
 // @ts-check
-const slot = window["__sensor__"] = Symbol("__sensor__");
+const slot = window["__sensor__"] = Symbol("__sensor__")
+let orientation = {}
+
 console.log('slot:', slot, typeof slot)
-let orientation = {};
 
 const defineProperties = (target, descriptions) => {
   for (const property in descriptions) {
@@ -15,17 +16,6 @@ const defineProperties = (target, descriptions) => {
 Object.defineProperty(orientation, "angle", {
   get: () => { return (window.orientation || 0) }
 })
-
-// if (screen.orientation) {
-//   orientation = screen.orientation;
-//   console.log('aquí 1')
-// } else if (screen.msOrientation) {
-//   orientation = screen.msOrientation;
-//   console.log('aquí 2')
-// } else {
-
-// console.log('aquí 3')
-// }
 
 
 export const EventTargetMixin = (superclass, ...eventNames) => class extends superclass {
@@ -65,7 +55,7 @@ export const EventTargetMixin = (superclass, ...eventNames) => class extends sup
   }
 };
 
-export class EventTarget extends EventTargetMixin(Object) { };
+export class EventTarget extends EventTargetMixin(Object) { }
 
 function defineReadonlyProperties(target, slot, descriptions) {
   const propertyBag = target[slot] || (target[slot] = new WeakMap);
