@@ -5,8 +5,6 @@
   <title>Absolute orientation sensor demo</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-  <!-- Origin Trial Token, feature = Generic Sensors, origin = https://intel.github.io, expires = 2018-02-27 -->
-  <!-- <meta http-equiv="origin-trial" data-feature="Generic Sensors" data-expires="2018-02-27" content="AjL+UlBzLjx+0FPXrML6IMA/Ax9GsO/7rUvV/aaKkh3KknUSwDBgymn0d3NhGeRMNS7FlYD73ernqvZNoqzNMw4AAABWeyJvcmlnaW4iOiJodHRwczovL2ludGVsLmdpdGh1Yi5pbzo0NDMiLCJmZWF0dXJlIjoiR2VuZXJpY1NlbnNvciIsImV4cGlyeSI6MTUxOTczOTAwNX0="> -->
   <style>
     body {
       margin: 0px;
@@ -23,9 +21,9 @@
 </head>
 
 <body>
-  <!-- <script src="js/three.min.js"></script> -->
-  <!-- <script src="js/OBJLoader.js"></script> -->
-  <!-- <script src="js/MTLLoader.js"></script> -->
+  <script src="js/three.min.js"></script>
+  <script src="js/OBJLoader.js"></script>
+  <script src="js/MTLLoader.js"></script>
 
   <script type="module">
     import { AbsoluteOrientationSensor } from '../sensor-polyfills/AbsoluteOrientationSensor.js'
@@ -36,49 +34,49 @@
 
             let container, sensor, camera, scene, renderer, model
 
-            // const initScene = () => {
-            //     container = document.createElement('div')
-            //     document.body.appendChild(container)
+            const initScene = () => {
+                container = document.createElement('div')
+                document.body.appendChild(container)
 
-            //     camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 200)
-            //     camera.position.z = 10
+                camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 200)
+                camera.position.z = 10
 
-            //     scene = new THREE.Scene()
+                scene = new THREE.Scene()
 
-            //     var ambientLight = new THREE.AmbientLight(0x404040, 6)
-            //     scene.add(ambientLight)
+                var ambientLight = new THREE.AmbientLight(0x404040, 6)
+                scene.add(ambientLight)
 
-            //     var manager = new THREE.LoadingManager()
-            //     var mtlLoader = new THREE.MTLLoader(manager)
-            //     mtlLoader.setTexturePath('resources/')
-            //     mtlLoader.load('resources/phone.mtl', materials => {
-            //         materials.preload()
-            //         var objLoader = new THREE.OBJLoader(manager)
-            //         objLoader.setMaterials(materials)
-            //         objLoader.load('resources/phone.obj', object => {
-            //             model = object
-            //             scene.add(model)
-            //       })
-            //     })
+                var manager = new THREE.LoadingManager()
+                var mtlLoader = new THREE.MTLLoader(manager)
+                mtlLoader.setTexturePath('resources/')
+                mtlLoader.load('resources/phone.mtl', materials => {
+                    materials.preload()
+                    var objLoader = new THREE.OBJLoader(manager)
+                    objLoader.setMaterials(materials)
+                    objLoader.load('resources/phone.obj', object => {
+                        model = object
+                        scene.add(model)
+                  })
+                })
 
-            //     renderer = new THREE.WebGLRenderer({ alpha: true })
-            //     renderer.setPixelRatio(window.devicePixelRatio)
-            //     renderer.setSize(window.innerWidth, window.innerHeight)
-            //     container.appendChild(renderer.domElement)
+                renderer = new THREE.WebGLRenderer({ alpha: true })
+                renderer.setPixelRatio(window.devicePixelRatio)
+                renderer.setSize(window.innerWidth, window.innerHeight)
+                container.appendChild(renderer.domElement)
 
-            //     window.addEventListener('resize', () => {
-            //         camera.aspect = window.innerWidth / window.innerHeight
-            //         camera.updateProjectionMatrix()
-            //         renderer.setSize(window.innerWidth, window.innerHeight)
-            //     }, false)
+                window.addEventListener('resize', () => {
+                    camera.aspect = window.innerWidth / window.innerHeight
+                    camera.updateProjectionMatrix()
+                    renderer.setSize(window.innerWidth, window.innerHeight)
+                }, false)
 
-            //     document.addEventListener('mousedown', () => document.documentElement.requestFullscreen())
-            //     document.addEventListener('fullscreenchange', () => {
-            //         if (document.fullscreenElement != null) {
-            //             screen.orientation.lock("natural")
-            //         }
-            //     })
-            // }
+                document.addEventListener('mousedown', () => document.documentElement.requestFullscreen())
+                document.addEventListener('fullscreenchange', () => {
+                    if (document.fullscreenElement != null) {
+                        screen.orientation.lock("natural")
+                    }
+                })
+            }
             const initSensor = () => {
             const options = { frequency: 60, coordinateSystem }
               console.log('options passed into AOS constructor:', JSON.stringify(options))
@@ -99,15 +97,15 @@
                 }
                 sensor.start()
 }
-            // const renderScene = () => {
-            //   requestAnimationFrame(renderScene)
-            //   camera.lookAt(scene.position)
-            //   renderer.render(scene, camera)
-            // }
+            const renderScene = () => {
+              requestAnimationFrame(renderScene)
+              camera.lookAt(scene.position)
+              renderer.render(scene, camera)
+            }
 
-            // initScene()
+            initScene()
             initSensor()
-            // renderScene()
+            renderScene()
 
             let log = console.log
             console.log = (message, ...rest) => {
